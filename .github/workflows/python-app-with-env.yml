@@ -1,0 +1,62 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python application env
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    
+  schedule:
+    - cron: "0 22 * * *"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'  
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Check hosts file
+      run: |
+        cat /etc/hosts
+    - name: Change hosts file
+      run: |
+        echo '127.0.0.1  api.map.baidu.com' | sudo tee -a /etc/hosts
+        cat /etc/hosts
+    - name: Ping test
+      run: |
+        ping api.map.baidu.com -c 3
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Start with env config
+      run: |
+        python ./main.py
+      env:
+        USER_NAMES: ${{ secrets.USER_NAMES }}
+        USER_PWDS: ${{ secrets.USER_PWDS }}
+        USER_EMAILS: ${{ secrets.USER_EMAILS }}
+        EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        EMAIL_PWD: ${{ secrets.EMAIL_PWD }}
+        EMAIL_ADMIN: ${{ secrets.EMAIL_ADMIN }}
+        
