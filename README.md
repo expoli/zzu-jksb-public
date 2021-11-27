@@ -31,6 +31,8 @@ EMAIL_USER=3333@163.com
 EMAIL_PWD=1234567890
 EMAIL_ADMIN=me@expoli.tech
 ```
+![image](https://user-images.githubusercontent.com/31023767/143683369-f4e0b750-ce9d-46a3-95d6-9e2e39cb122e.png)
+
 
 ### 开始运行
 
