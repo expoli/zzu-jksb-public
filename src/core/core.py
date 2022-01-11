@@ -65,13 +65,13 @@ def sign_in(uid, pwd, user_email):
         # this day you
         # 今日您还没有填报过
         print("Checking whether User {0} has signed in".format(formatted_uid))
-        if browser.find_element_by_xpath("//*[@id='bak_0']/div[7]/span").text == '今日您已经填报过了':
-            commit_msg += browser.find_element_by_xpath("//*[@id='bak_0']/div[7]/span").text + '\n'
+        if browser.find_element_by_xpath('//*[@id="bak_0"]/div[5]/span').text == '今日您已经填报过了':
+            commit_msg += browser.find_element_by_xpath('//*[@id="bak_0"]/div[5]/span').text + '\n'
             return commit_msg
 
         # 点击开始本人填报
-        # //*[@id="bak_0"]/div[13]/div[3]/div[4]/span
-        browser.find_element_by_xpath('//*[@id="bak_0"]/div[13]/div[3]/div[4]/span').click()
+        # //*[@id="bak_0"]/div[11]/div[3]/div[4]/span
+        browser.find_element_by_xpath('//*[@id="bak_0"]/div[11]/div[3]/div[4]/span').click()
         time.sleep(1)
 
         # 设置为绿码
@@ -81,12 +81,12 @@ def sign_in(uid, pwd, user_email):
         qr_status_sel = Select(browser.find_element_by_xpath('//*[@id="bak_0"]/div[8]/div[2]/div[2]/div[2]/select[1]'))
         qr_status_sel.select_by_value('g')
 
-        # 设置疫苗接种情况为接种第二针
+        # 设置疫苗接种情况为接种第三针
         # //*[@id="bak_0"]/div[8]/div[2]/div[2]/div[2]/div[2]/select
 
         qr_status_sel = Select(
             browser.find_element_by_xpath('//*[@id="bak_0"]/div[8]/div[2]/div[2]/div[2]/div[2]/select[1]'))
-        qr_status_sel.select_by_value('2')
+        qr_status_sel.select_by_value('5')
 
         # 点击提交表格
 
