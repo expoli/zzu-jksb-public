@@ -86,7 +86,7 @@ def sign_in(uid, pwd, user_email):
 
         qr_status_sel = Select(
             browser.find_element_by_xpath('//*[@id="bak_0"]/div[8]/div[2]/div[2]/div[2]/div[2]/select[1]'))
-        qr_status_sel.select_by_value('5')
+        qr_status_sel.select_by_value('3')
 
         # 点击提交表格
 
