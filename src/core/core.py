@@ -18,10 +18,7 @@ def is_element_present(browser, xpath):
     else:
         return True
 
-
-def sign_in(uid, pwd, user_email):
-    formatted_uid = uid[-3:]
-
+def chrome_init():
     # set to no-window
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -41,7 +38,13 @@ def sign_in(uid, pwd, user_email):
     browser = webdriver.Chrome(desired_capabilities=capabilities)
     # disable cache
     browser.delete_all_cookies()
+    return browser
 
+def sign_in(uid, pwd, user_email):
+    formatted_uid = uid[-3:]
+    
+    browser = chrome_init()
+    
     commit_msg = ""
 
     try:
@@ -63,7 +66,6 @@ def sign_in(uid, pwd, user_email):
         browser.get(real_mid_page_url)
         time.sleep(2)
 
-        # this day you
         # 今日您还没有填报过
         print("Checking whether User {0} has signed in".format(formatted_uid))
         if browser.find_element_by_xpath('//*[@id="bak_0"]/div[5]/span').text == '今日您已经填报过了':
@@ -111,10 +113,11 @@ def sign_in(uid, pwd, user_email):
         return commit_msg
 
     except Exception as e:
-        msg = "while signing in for user " + formatted_uid + " there is an exception: \n" + e.__str__()
-        # print(msg)
+        msg = "登陆中间出现异常（有人分布式拉了，我不说是谁）\n" + "用户："+formatted_uid + " \n异常信息如下: \n" + e.__str__()
+        
         mail(msg, EMAIL_ADMIN)
         mail(msg, user_email)
+
         return ""
     finally:
         # quit the browser
