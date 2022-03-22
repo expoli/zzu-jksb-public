@@ -27,8 +27,12 @@ try:
     #     # sleep 30 secs
     #     time.sleep(30)
     for user in users:
-        commit_msg = sign_in(user.uid, user.pwd, user.email)
         for i in range(0,retry_time):
+            time.sleep(300)#每次登陆前先睡五分钟，概率避免被负载均衡到证书错误的节点
+
+            commit_msg = sign_in(user.uid, user.pwd, user.email)#进行登陆
+
+
             if "已完成今日" in commit_msg:
                 msg = user.uid + ": " + commit_msg
                 print("Emailing to User {0} for notification".format(user.uid[-3:]))
