@@ -18,6 +18,7 @@ def is_element_present(browser, xpath):
     else:
         return True
 
+
 def chrome_init():
     # set to no-window
     chrome_options = Options()
@@ -40,11 +41,12 @@ def chrome_init():
     browser.delete_all_cookies()
     return browser
 
+
 def sign_in(uid, pwd, user_email):
     formatted_uid = uid[-3:]
-    
+
     browser = chrome_init()
-    
+
     commit_msg = ""
 
     try:
@@ -89,7 +91,7 @@ def sign_in(uid, pwd, user_email):
 
         qr_status_sel = Select(
             browser.find_element_by_xpath('//*[@id="bak_0"]/div[8]/div[2]/div[2]/div[2]/div[2]/select[1]'))
-        qr_status_sel.select_by_value('3')
+        qr_status_sel.select_by_value('5')
 
         # 点击提交表格
 
@@ -113,52 +115,14 @@ def sign_in(uid, pwd, user_email):
         return commit_msg
 
     except Exception as e:
-        msg = "登陆中间出现异常（有人分布式拉了，我不说是谁）\n" + "用户："+formatted_uid + " \n异常信息如下: \n" + e.__str__()
-        
-        mail(msg, EMAIL_ADMIN)
-        mail(msg, user_email)
+        msg = "登陆中间出现异常（有人分布式拉了，我不说是谁）\n" + "用户：" + formatted_uid + " \n异常信息如下: \n" + e.__str__()
 
-        return ""
+        # mail(msg, EMAIL_ADMIN)
+        # mail(msg, user_email)
+
+        return msg
     finally:
         # quit the browser
         print("Singing in for User {0} is finished".format(formatted_uid))
         browser.delete_all_cookies()
         browser.quit()
-
-
-def timing(hour, minute, the_users):
-    now = datetime.datetime.now()
-    if now.hour == hour and now.minute == minute:
-        print("\n\n\n")
-        print(now)
-        for user in the_users:
-            formatted_uid = user.uid[-3:]
-            commit_msg = sign_in(user.uid, user.pwd, user.email)
-
-            msg = user.uid + ": " + commit_msg
-            print("Emailing to User {0} for notification".format(formatted_uid))
-            mail(msg, user.email)
-            print("Emailing is finished")
-
-# if __name__ == "__main__":
-
-# For Single User
-# msg = sign_in(UID, PWD)
-# mail.mail(msg, EMAIL_TO)
-
-# For Multiple Users
-# for user in users:
-#     msg = sign_in(user.uid, user.pwd)
-#     print("Emailing to User {0} for notification".format(user.uid))
-#     mail.mail(msg, user.email)
-#     print("Emailing is finished")
-
-# For Timing and Multiple Users
-# while True:
-#     # sign for tow
-#     timing(6, 0, users)
-#     # sign for the others
-#     timing(8, 30, stus)
-#
-#     # sleep 30 secs
-#     time.sleep(30)
