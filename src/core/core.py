@@ -27,6 +27,7 @@ def sign_in(uid, pwd, user_email):
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--ignore-certificate-errors")
+    chrome_options.add_argument("--ssl-version-fallback-min=tls1")
 
     # 0 - Default, 1 - Allow, 2 - Block
     # https://www.browserstack.com/docs/automate/selenium/handle-permission-pop-ups#handle-know-your-location-pop-up
