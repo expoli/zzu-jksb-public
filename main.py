@@ -12,22 +12,13 @@ users = []
 # 尝试通过使用尝试次数增加容错率
 retry_time = 10
 
-try:
+while len(USER_NAMES) > 0:
+    users.append(User(USER_NAMES.pop(), USER_PWDS.pop(), USER_EMAILS.pop()))
 
-    while len(USER_NAMES) > 0:
-        users.append(User(USER_NAMES.pop(), USER_PWDS.pop(), USER_EMAILS.pop()))
-
-    # For Timing and Multiple Users
-    # while True:
-    #     # sign for tow
-    #     timing(8, 0, users)
-    #     # sign for the others
-    #     # timing(8, 30, stus)
-    #
-    #     # sleep 30 secs
-    #     time.sleep(30)
-    for user in users:
-        for i in range(0, retry_time):
+for user in users:
+    done_flag = False
+    for i in range(0, retry_time):
+        try:
             # 进行登陆
             commit_msg = sign_in(user.uid, user.pwd, user.email)
             if "已完成今日" in commit_msg:
@@ -35,14 +26,16 @@ try:
                 print("Emailing to User {0} for notification".format(user.uid[-3:]))
                 mail(msg, user.email)
                 print("Emailing is finished")
+                done_flag = True
                 break
             elif "今日您已经填报过了" in commit_msg:
                 msg = user.uid + ": " + commit_msg
                 print("Emailing to User {0} for notification".format(user.uid[-3:]))
                 mail(msg, user.email)
                 print("Emailing is finished")
+                done_flag = True
                 break
-            elif i == retry_time-1:
+            elif i == retry_time - 1:
                 msg = user.uid + ": " + commit_msg
                 print("Emailing to User {0} for notification".format(user.uid[-3:]))
                 # 出错信息提示
@@ -50,7 +43,5 @@ try:
                 mail(msg, EMAIL_ADMIN)
                 print("Emailing is finished")
                 break
-
-except Exception as e:
-    print(e.__str__())
-    exit(1)
+        except Exception as e:
+            print(e.__str__())
